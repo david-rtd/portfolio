@@ -65,12 +65,12 @@ export default function MacTerminal() {
   // Customize this welcome message with your information
   const welcomeMessage = `Welcome to My Portfolio
 
-Name: John Doe
-Role: Full Stack Developer
-Location: Austin, TX
+Name: David OretgaDorado
+Role: Full Stack Developer and cibersecurity analist
+Location: Spain
 
-Contact: john@johndoe.com
-GitHub: github.com/johndoe
+Contact: ortegadorado1@gmail.com
+GitHub: github.com/david-rtd
 
 Ask me anything!
 `;
@@ -83,26 +83,26 @@ Ask me anything!
   });
 
   // Customize the system prompt with your personal information
-  const systemPrompt = `IMPORTANT: You ARE John Doe himself. You must always speak in first-person ("I", "my", "me"). Never refer to "John" in third-person.
+  const systemPrompt = `IMPORTANT: You ARE David Ortega Dorado himself. You must always speak in first-person ("I", "my", "me"). Never refer to "David" in third-person.
 CURRENT DATE: ${formattedDate} - Always use this exact date when discussing the current date/year.
 
 Example responses:
 Q: "Where do you live?"
-A: "I live in Austin, TX"
+A: "I live in Getafe, Spain"
 
 Q: "What's your background?"
-A: "I'm a Full Stack Developer with experience in React, Next.js, and Node.js"
+A: "I am a Full Stack developer with experience in React, Next.js, Fastify Node.js, SupaBase, Prisma ORM, Railways among other tools. I am also certified in the IFCT0046 training specialty in cybersecurity and cyber intelligence, managing systems such as Kali Linux, SIEM, security regulations like ISO 27001 and MAGERIT, audits with Sguil, using BurpSuite to monitor endpoints..."
 
 Q: "How old are you?"
-A: "I'm 34 years old"
+A: "I'm 21 years old"
 
 Core details about me:
-- I'm 34 years old
+- I'm 20 years old
 - I live in Austin, TX
-- I'm a Full Stack Developer
-- My email is john@johndoe.com
-- I was born in 1991
-- I was born in Austin, TX
+- I'm a Full Stack Developer and cibersecurity analist
+- My email is ortegadorado1@gmail.com.com
+- I was born in 2005
+- I was born in Getafe, Spain
 
 My technical expertise:
 - Full Stack Development
@@ -111,12 +111,12 @@ My technical expertise:
 
 Response rules:
 1. ALWAYS use first-person (I, me, my)
-2. Never say "John" or refer to myself in third-person
+2. Never say "David" or refer to myself in third-person
 3. Keep responses concise and professional
 4. Use markdown formatting when appropriate
 5. Maintain a friendly, conversational tone
 
-If a question is unrelated to my work or portfolio, say: "That's outside my area of expertise. Feel free to email me at john@johndoe.com and we can discuss further!"`;
+If a question is unrelated to my work or portfolio, say: "That's outside my area of expertise. Feel free to email me at ortegadorado1@gmail.com.com and we can discuss further!"`;
 
   useEffect(() => {
     setChatHistory((prev) => ({
@@ -183,7 +183,7 @@ If a question is unrelated to my work or portfolio, say: "That's outside my area
           {
             role: 'assistant',
             content:
-              "I'm having trouble processing that. Please email me at john@johndoe.com",
+              "I'm having trouble processing that. Please email me at ortegadorado1@gmail.com",
           },
         ],
       }));
@@ -200,7 +200,7 @@ If a question is unrelated to my work or portfolio, say: "That's outside my area
         <div className='w-3 h-3 rounded-full bg-green-500'></div>
         <span className='text-sm text-gray-300 flex-grow text-center font-semibold flex items-center justify-center gap-2'>
           <FaRegFolderClosed size={14} className='text-gray-300' />
-          johndoe.com ⸺ zsh
+          ortegadorado.com ⸺ zsh
         </span>
       </div>
       <div className='p-4 text-gray-200 font-mono text-xs h-[calc(400px-1.5rem)] flex flex-col'>
@@ -223,7 +223,7 @@ If a question is unrelated to my work or portfolio, say: "That's outside my area
         <form onSubmit={handleSubmit} className='mt-2'>
           <div className='flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2'>
             {/* Customize the terminal title with your domain */}
-            <span className='whitespace-nowrap'>john@johndoe.com root %</span>
+            <span className='whitespace-nowrap'>david@ortegadorado.com root %</span>
             <input
               type='text'
               value={chatHistory.input}

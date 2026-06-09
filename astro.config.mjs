@@ -2,11 +2,11 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
-import vercel from '@astrojs/vercel';
+import node from '@astrojs/node'; // <-- Cambiado: Importamos Node en lugar de Vercel
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  // Replace with your website URL (required for sitemap generation)
+  // Reemplaza con la URL de tu dominio definitivo cuando lo tengas
   site: 'https://example.com',
 
   // URL configuration
@@ -30,8 +30,10 @@ export default defineConfig({
   ],
 
   // Deployment configuration
-  output: 'server', // Server-side rendering - required for OpenAI API usage
-  adapter: vercel(), // Deploy to Vercel - optional
+  output: 'server', // Server-side rendering - Requerido para tu API de Cohere
+  adapter: node({   // <-- Cambiado: Configurado para que Railway cree un servidor Node estable
+    mode: 'standalone',
+  }),
   devToolbar: {
     enabled: false,
   },
