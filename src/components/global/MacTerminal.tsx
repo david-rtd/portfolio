@@ -18,6 +18,7 @@ const PLACEHOLDER_MESSAGES = [
   'What are your skills?',
   'Where are you located?',
   'What projects have you worked on?',
+  'Where have you worked?',
 ];
 
 export default function MacTerminal() {
