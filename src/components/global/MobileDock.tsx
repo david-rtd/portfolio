@@ -6,8 +6,8 @@ import { RiAwardLine } from 'react-icons/ri';
 
 export default function MobileDock() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false); 
-  const [isFinderOpen, setIsFinderOpen] = useState(false); // <-- Nuevo estado para el Explorador de Proyectos móvil
-  const [activeDoc, setActiveDoc] = useState<'cv' | 'johndeere'>('cv'); 
+  const [isFinderOpen, setIsFinderOpen] = useState(false); 
+  const [activeDoc, setActiveDoc] = useState<'cv' | 'johandeere'>('cv'); 
 
   const handleEmailClick = () => {
     window.location.href = 'mailto:ortegadorado1@gmail.com';
@@ -17,21 +17,31 @@ export default function MobileDock() {
     window.open('https://github.com/david-rtd', '_blank');
   };
 
-  // --- MISMO ARRAY DE PROYECTOS QUE EN ESCRITORIO ---
+  // --- MATRIZ DE PROYECTOS SINCRONIZADA CON ESCRITORIO (CON IMÁGENES) ---
   const projects = [
     {
-      name: 'doglog',
-      description: 'Linux Log Watchdog & Incident Response (IDS) en Python con alertas de Telegram.',
-      url: 'https://github.com/david-rtd/doglog',
+      name: "HoneyDog",
+      description: "SSH Honeypot interactivo con arquitectura multihilo. Captura intentos de intrusión por fuerza bruta, simula un entorno GNU/Linux controlado y audita comandos enviando alertas push en tiempo real vía Telegram API.",
+      tag: 'Cybersecurity',
+      url: "https://github.com/david-rtd/honeydog",
       icon: <IoLogoPython size={22} className="text-yellow-500" />,
-      tag: 'Cybersecurity'
+      image: "/images/honeydog-banner.png" 
     },
     {
-      name: 'portfolio-mac-os',
+      name: 'DogLog',
+      description: 'Linux Log Watchdog & Incident Response (IDS) en Python con alertas de Telegram.',
+      tag: 'Cybersecurity',
+      url: 'https://github.com/david-rtd/doglog',
+      icon: <IoLogoPython size={22} className="text-yellow-500" />,
+      image: "/images/doglog-banner.png"
+    },
+    {
+      name: 'Portfolio',
       description: 'Portfolio web interactivo con diseño e interfaz de entorno de escritorio macOS.',
+      tag: 'Full-Stack',
       url: 'https://github.com/david-rtd/portfolio', 
       icon: <IoCodeSlash size={22} className="text-blue-400" />,
-      tag: 'Full-Stack'
+      image: "/images/favi.png"
     }
   ];
 
@@ -72,7 +82,7 @@ export default function MobileDock() {
             </div>
           </button>
 
-          {/* Finder: Explorador de Proyectos (REEMPLAZA A SPOTIFY) */}
+          {/* Finder */}
           <button
             onClick={() => setIsFinderOpen(true)}
             className='flex flex-col items-center cursor-pointer'
@@ -94,7 +104,7 @@ export default function MobileDock() {
         </div>
       </div>
 
-      {/* --- MODAL MÓVIL: FINDER / PROYECTOS (NUEVO) --- */}
+      {/* --- MODAL MÓVIL: FINDER / PROYECTOS --- */}
       {isFinderOpen && (
         <div className='fixed inset-0 bg-[#121212] z-50 flex flex-col font-sans text-white'>
           
@@ -128,24 +138,43 @@ export default function MobileDock() {
               <div
                 key={index}
                 onClick={() => window.open(project.url, '_blank')}
-                className='bg-[#1e1e1e] border border-gray-800 p-4 rounded-2xl active:bg-[#252526] active:border-gray-700 transition-all shadow-md flex flex-col justify-between'
+                className='bg-[#1e1e1e] border border-gray-800 rounded-2xl active:bg-[#252526] active:border-gray-700 transition-all shadow-md flex flex-col justify-between overflow-hidden'
               >
                 <div>
-                  <div className='flex items-center justify-between mb-2.5'>
-                    <div className='flex items-center gap-2 font-mono text-base font-bold text-blue-400'>
-                      {project.icon}
-                      {project.name}
+                  {/* Cabecera de la tarjeta con padding interno */}
+                  <div className='p-4 pb-2'>
+                    <div className='flex items-center justify-between mb-2.5'>
+                      <div className='flex items-center gap-2 font-mono text-base font-bold text-blue-400 min-h-[24px]'>
+                        {project.icon ? project.icon : <span>🐾</span>}
+                        {project.name}
+                      </div>
+                      <span className='text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#2a2a2b] text-gray-400 border border-gray-800 shrink-0'>
+                        {project.tag}
+                      </span>
                     </div>
-                    <span className='text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#2a2a2b] text-gray-400 border border-gray-800'>
-                      {project.tag}
-                    </span>
                   </div>
-                  <p className='text-xs text-gray-400 leading-relaxed font-sans'>
-                    {project.description}
-                  </p>
+
+                  {/* --- BLOQUE DE IMAGEN AJUSTADO PARA MÓVIL --- */}
+                  {project.image && (
+                    <div className="w-full h-28 bg-[#252526]/40 flex items-center justify-center border-y border-gray-800/60 overflow-hidden relative">
+                      <img 
+                        src={project.image} 
+                        alt={project.name} 
+                        className="w-full h-full object-contain scale-[1.5] active:scale-[1.6] transition-transform duration-300"
+                      />
+                    </div>
+                  )}
+
+                  {/* Descripción con padding interno */}
+                  <div className='p-4 pt-3'>
+                    <p className='text-xs text-gray-400 leading-relaxed font-sans'>
+                      {project.description}
+                    </p>
+                  </div>
                 </div>
                 
-                <div className='text-xs text-blue-500 font-medium mt-4 flex items-center gap-1 font-sans'>
+                {/* Enlace inferior */}
+                <div className='text-xs text-blue-500 font-medium px-4 pb-4 flex items-center gap-1 font-sans mt-auto select-none'>
                   Abrir en GitHub <IoOpenOutline size={12} />
                 </div>
               </div>
@@ -156,7 +185,7 @@ export default function MobileDock() {
 
       {/* --- MODAL MÓVIL PANTALLA COMPLETA: PREVIEW --- */}
       {isPreviewOpen && (
-        <div className='fixed inset-0 bg-[#121212] z-50 flex flex-col font-sans text-white animate-fade-in'>
+        <div className='fixed inset-0 bg-[#121212] z-50 flex flex-col font-sans text-white'>
           <div className='bg-[#1e1e1e] h-14 flex items-center justify-between px-4 border-b border-gray-800 shrink-0'>
             <button 
               onClick={() => setIsPreviewOpen(false)} 

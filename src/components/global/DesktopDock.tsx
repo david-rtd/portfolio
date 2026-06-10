@@ -10,7 +10,7 @@ export default function DesktopDock() {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isVSCodeOpen, setIsVSCodeOpen] = useState(false); 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false); 
-  const [isFinderOpen, setIsFinderOpen] = useState(false); // <-- Nuevo estado para el Explorador de Proyectos
+  const [isFinderOpen, setIsFinderOpen] = useState(false); 
   const [activeDoc, setActiveDoc] = useState<'cv' | 'johndeere'>('cv'); 
 
   const handleEmailClick = () => {
@@ -21,21 +21,31 @@ export default function DesktopDock() {
     window.open('https://github.com/david-rtd', '_blank');
   };
 
-  // --- MATRIZ DE TUS PROYECTOS DE GITHUB ---
+  // --- MATRIZ DE PROYECTOS ACTUALIZADA CON IMÁGENES ---
   const projects = [
     {
-      name: 'doglog',
-      description: 'Linux Log Watchdog & Incident Response (IDS) en Python con alertas de Telegram.',
-      url: 'https://github.com/david-rtd/doglog', // Cambia si tu repo tiene otro nombre
+      name: "HoneyDog",
+      description: "SSH Honeypot interactivo con arquitectura multihilo. Captura intentos de intrusión por fuerza bruta, simula un entorno GNU/Linux controlado y audita comandos enviando alertas push en tiempo real vía Telegram API.",
+      tag: 'Cybersecurity',
+      url: "https://github.com/david-rtd/honeydog",
       icon: <IoLogoPython size={20} className="text-yellow-500" />,
-      tag: 'Cybersecurity'
+      image: "/images/honeydog-banner.png" 
     },
     {
-      name: 'Mi portfolio',
+      name: 'DogLog',
+      description: 'Linux Log Watchdog & Incident Response (IDS) en Python con alertas de Telegram.',
+      tag: 'Cybersecurity',
+      url: 'https://github.com/david-rtd/doglog', 
+      icon: <IoLogoPython size={20} className="text-yellow-500" />,
+      image: "/images/doglog-banner.png" // Añade aquí tu PNG para doglog
+    },
+    {
+      name: 'Portfolio',
       description: 'Portfolio web interactivo con diseño e interfaz de entorno de escritorio macOS.',
+      tag: 'Full-Stack',
       url: 'https://github.com/david-rtd/portfolio', 
       icon: <IoCodeSlash size={20} className="text-blue-400" />,
-      tag: 'Full-Stack'
+      image: "/images/favi.png" // Añade aquí tu PNG para el portfolio
     }
   ];
 
@@ -101,7 +111,7 @@ export default function DesktopDock() {
               {hoveredIcon === 'github' && <Tooltip text='My GitHub Profile' />}
             </button>
 
-            {/* Finder: Explorador de Proyectos (REEMPLAZA A SPOTIFY) */}
+            {/* Finder */}
             <button
               onClick={() => setIsFinderOpen(true)}
               onMouseEnter={() => setHoveredIcon('finder')}
@@ -175,12 +185,12 @@ export default function DesktopDock() {
         </div>
       </div>
 
-      {/* --- MODAL: FINDER / EXPLORADOR DE PROYECTOS (NUEVO) --- */}
+      {/* --- MODAL: FINDER --- */}
       {isFinderOpen && (
         <div className='fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 transition-opacity duration-200'>
-          <div className='bg-[#1e1e1e] border border-gray-700 w-full max-w-2xl h-[400px] rounded-xl overflow-hidden shadow-2xl flex flex-col font-sans text-white transform-gpu transition-transform duration-200'>
+          <div className='bg-[#1e1e1e] border border-gray-700 w-full max-w-4xl h-[520px] rounded-xl overflow-hidden shadow-2xl flex flex-col font-sans text-white transform-gpu transition-transform duration-200'>
             
-            {/* Barra superior macOS */}
+            {/* Barra superior de la ventana */}
             <div className='bg-[#2d2d2d] h-10 flex items-center justify-between px-4 border-b border-gray-800 select-none shrink-0'>
               <div className='flex items-center space-x-2'>
                 <button 
@@ -196,7 +206,6 @@ export default function DesktopDock() {
               <div className='w-14'></div>
             </div>
 
-            {/* Cuerpo del Finder */}
             <div className='flex flex-1 overflow-hidden w-full'>
               {/* Barra lateral izquierda */}
               <div className='w-40 bg-[#252526] p-3 hidden sm:flex flex-col shrink-0 border-r border-gray-800 select-none text-gray-400'>
@@ -209,30 +218,54 @@ export default function DesktopDock() {
                 </div>
               </div>
 
-              {/* Vista de cuadrícula de repositorios */}
+              {/* Contenedor Grid Principal */}
               <div className='flex-1 bg-[#1e1e1e] p-5 overflow-y-auto'>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-4 h-full content-start'>
                   {projects.map((project, index) => (
                     <div
                       key={index}
                       onClick={() => window.open(project.url, '_blank')}
-                      className='bg-[#2d2d2d] border border-gray-700/60 p-4 rounded-xl hover:border-blue-500/70 hover:bg-[#333334] transition-all cursor-pointer group flex flex-col justify-between shadow-sm'
+                      className='bg-[#2d2d2d] border border-gray-700/60 rounded-xl hover:border-blue-500/70 hover:bg-[#333334] transition-all cursor-pointer group flex flex-col justify-between shadow-sm overflow-hidden h-full'
                     >
-                      <div>
-                        <div className='flex items-center justify-between mb-2'>
-                          <div className='flex items-center gap-2 font-mono text-sm font-semibold text-blue-400 group-hover:text-blue-300'>
-                            {project.icon}
-                            {project.name}
+                      <div className="flex flex-col h-full">
+                        {/* Cabecera del proyecto */}
+                        <div className="p-4 pb-2">
+                          <div className='flex items-center justify-between mb-2'>
+                            <div className='flex items-center gap-2 font-mono text-sm font-semibold text-blue-400 group-hover:text-blue-300 min-h-[24px]'>
+                              {project.icon ? project.icon : <span>🐾</span>}
+                              {project.name}
+                            </div>
+                            <span className='text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#1a1a1a] text-gray-400 border border-gray-700 shrink-0'>
+                              {project.tag}
+                            </span>
                           </div>
-                          <span className='text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#1a1a1a] text-gray-400 border border-gray-700'>
-                            {project.tag}
-                          </span>
                         </div>
-                        <p className='text-xs text-gray-400 font-sans leading-relaxed'>
-                          {project.description}
-                        </p>
+
+                        {/* Contenedor visual integrado */}
+			{project.image && (
+			  // 1. Dejamos el contenedor base con una altura fija controlada (ej. h-32)
+			  <div className="w-full h-23 bg-[#252526]/40 flex items-center justify-center border-y border-gray-700/30 overflow-hidden relative">
+			    
+			    {/* 2. Escalamos la imagen directamente (ej. scale-150 para un 50% más grande o scale-[1.8] para más) */}
+			    <img 
+			      src={project.image} 
+			      alt={project.name} 
+			      className="w-full h-full object-contain scale-[1.4] group-hover:scale-[1.55] transition-transform duration-300"
+			    />
+
+			  </div>
+			)}
+
+                        {/* Descripción corta */}
+                        <div className="p-4 pt-2 flex-1">
+                          <p className='text-xs text-gray-400 font-sans leading-relaxed line-clamp-5'>
+                            {project.description}
+                          </p>
+                        </div>
                       </div>
-                      <div className='text-[10px] text-blue-500 font-medium mt-4 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1 font-sans'>
+                      
+                      {/* Enlace inferior */}
+                      <div className='text-[10px] text-blue-500 font-medium px-4 pb-4 pt-1 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1 font-sans mt-auto select-none'>
                         Ver repositorio externo {'➔'}
                       </div>
                     </div>
