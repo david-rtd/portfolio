@@ -28,8 +28,8 @@ export default function MobileDock() {
     },
     {
       name: 'portfolio-mac-os',
-      description: 'Tu portfolio web interactivo con diseño e interfaz de entorno de escritorio macOS.',
-      url: 'https://github.com/david-rtd', 
+      description: 'Portfolio web interactivo con diseño e interfaz de entorno de escritorio macOS.',
+      url: 'https://github.com/david-rtd/portfolio', 
       icon: <IoCodeSlash size={22} className="text-blue-400" />,
       tag: 'Full-Stack'
     }

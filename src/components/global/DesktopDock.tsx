@@ -33,7 +33,7 @@ export default function DesktopDock() {
     {
       name: 'Mi portfolio',
       description: 'Portfolio web interactivo con diseño e interfaz de entorno de escritorio macOS.',
-      url: 'https://github.com/david-rtd', 
+      url: 'https://github.com/david-rtd/portfolio', 
       icon: <IoCodeSlash size={20} className="text-blue-400" />,
       tag: 'Full-Stack'
     }
