@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { BsGithub, BsSpotify, BsTelegram } from 'react-icons/bs';
+import { BsGithub, BsTelegram } from 'react-icons/bs';
 import { IoIosMail } from 'react-icons/io';
-import { IoDocumentText, IoClose, IoOpenOutline } from 'react-icons/io5'; 
+import { IoDocumentText, IoClose, IoOpenOutline, IoFolderOutline, IoLogoPython, IoCodeSlash } from 'react-icons/io5'; 
 import { RiAwardLine } from 'react-icons/ri';
 
 export default function MobileDock() {
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false); // <-- Estado para el modal móvil
-  const [activeDoc, setActiveDoc] = useState<'cv' | 'johndeere'>('cv'); // <-- Alternador de documento activo
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false); 
+  const [isFinderOpen, setIsFinderOpen] = useState(false); // <-- Nuevo estado para el Explorador de Proyectos móvil
+  const [activeDoc, setActiveDoc] = useState<'cv' | 'johndeere'>('cv'); 
 
   const handleEmailClick = () => {
     window.location.href = 'mailto:ortegadorado1@gmail.com';
@@ -16,15 +17,29 @@ export default function MobileDock() {
     window.open('https://github.com/david-rtd', '_blank');
   };
 
-  const handleSpotifyClick = () => {
-    window.open('https://open.spotify.com', '_blank');
-  };
+  // --- MISMO ARRAY DE PROYECTOS QUE EN ESCRITORIO ---
+  const projects = [
+    {
+      name: 'doglog',
+      description: 'Linux Log Watchdog & Incident Response (IDS) en Python con alertas de Telegram.',
+      url: 'https://github.com/david-rtd/doglog',
+      icon: <IoLogoPython size={22} className="text-yellow-500" />,
+      tag: 'Cybersecurity'
+    },
+    {
+      name: 'portfolio-mac-os',
+      description: 'Tu portfolio web interactivo con diseño e interfaz de entorno de escritorio macOS.',
+      url: 'https://github.com/david-rtd', 
+      icon: <IoCodeSlash size={22} className="text-blue-400" />,
+      tag: 'Full-Stack'
+    }
+  ];
 
   return (
     <>
       {/* --- DOCK MÓVIL --- */}
       <div className='fixed bottom-0 left-0 right-0 md:hidden z-40'>
-        <div className='mx-4 mb-4 p-3 bg-gradient-to-t from-gray-700 to-gray-800 backdrop-blur-xl rounded-3xl flex justify-around items-center max-w-[400px] mx-auto shadow-2xl'>
+        <div className='mx-4 mb-4 p-3 bg-gradient-to-t from-gray-700 to-gray-800 backdrop-blur-xl rounded-3xl flex justify-around items-center max-w-[400px] mx-auto shadow-2xl border border-white/10'>
           {/* Telegram */}
           <a 
             href='https://t.me/davidrtd' 
@@ -57,7 +72,17 @@ export default function MobileDock() {
             </div>
           </button>
 
-          {/* Visor de Documentos (Modificado para abrir el modal interno) */}
+          {/* Finder: Explorador de Proyectos (REEMPLAZA A SPOTIFY) */}
+          <button
+            onClick={() => setIsFinderOpen(true)}
+            className='flex flex-col items-center cursor-pointer'
+          >
+            <div className='w-14 h-14 bg-gradient-to-t from-gray-200 to-gray-400 rounded-2xl flex items-center justify-center shadow-md border border-white/5'>
+              <IoFolderOutline size={36} className='text-blue-600' />
+            </div>
+          </button>
+
+          {/* Visor de Documentos */}
           <button
             onClick={() => setIsPreviewOpen(true)}
             className='flex flex-col items-center cursor-pointer'
@@ -66,24 +91,72 @@ export default function MobileDock() {
               <IoDocumentText size={34} className='text-white' />
             </div>
           </button>
-
-          {/* Spotify */}
-          <button
-            onClick={handleSpotifyClick}
-            className='flex flex-col items-center cursor-pointer'
-          >
-            <div className='w-14 h-14 bg-gradient-to-t from-black to-black/60 rounded-2xl flex items-center justify-center shadow-md'>
-              <BsSpotify size={36} className='text-[#1ED760]' />
-            </div>
-          </button>
         </div>
       </div>
+
+      {/* --- MODAL MÓVIL: FINDER / PROYECTOS (NUEVO) --- */}
+      {isFinderOpen && (
+        <div className='fixed inset-0 bg-[#121212] z-50 flex flex-col font-sans text-white'>
+          
+          {/* Cabecera Finder Móvil */}
+          <div className='bg-[#1e1e1e] h-14 flex items-center justify-between px-4 border-b border-gray-800 shrink-0'>
+            <button 
+              onClick={() => setIsFinderOpen(false)} 
+              className='p-2 rounded-full bg-gray-800 hover:bg-gray-700 active:scale-95 transition-all text-gray-400 hover:text-white'
+            >
+              <IoClose size={20} />
+            </button>
+            
+            <span className='text-sm font-semibold tracking-wide'>Finder — Proyectos</span>
+            
+            <button 
+              onClick={handleGithubClick}
+              className='p-2 rounded-full bg-gray-800 text-gray-300 active:scale-95 transition-all'
+              title="Open GitHub"
+            >
+              <BsGithub size={18} />
+            </button>
+          </div>
+
+          {/* Lista de repositorios táctil */}
+          <div className='flex-1 overflow-y-auto p-4 space-y-4 bg-[#121212] pb-24'>
+            <div className='text-xs font-bold text-gray-500 uppercase tracking-wider pl-1 select-none'>
+              Repositorios ({projects.length})
+            </div>
+            
+            {projects.map((project, index) => (
+              <div
+                key={index}
+                onClick={() => window.open(project.url, '_blank')}
+                className='bg-[#1e1e1e] border border-gray-800 p-4 rounded-2xl active:bg-[#252526] active:border-gray-700 transition-all shadow-md flex flex-col justify-between'
+              >
+                <div>
+                  <div className='flex items-center justify-between mb-2.5'>
+                    <div className='flex items-center gap-2 font-mono text-base font-bold text-blue-400'>
+                      {project.icon}
+                      {project.name}
+                    </div>
+                    <span className='text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#2a2a2b] text-gray-400 border border-gray-800'>
+                      {project.tag}
+                    </span>
+                  </div>
+                  <p className='text-xs text-gray-400 leading-relaxed font-sans'>
+                    {project.description}
+                  </p>
+                </div>
+                
+                <div className='text-xs text-blue-500 font-medium mt-4 flex items-center gap-1 font-sans'>
+                  Abrir en GitHub <IoOpenOutline size={12} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* --- MODAL MÓVIL PANTALLA COMPLETA: PREVIEW --- */}
       {isPreviewOpen && (
         <div className='fixed inset-0 bg-[#121212] z-50 flex flex-col font-sans text-white animate-fade-in'>
-          
-          {/* Cabecera táctil estilo iOS/macOS */}
           <div className='bg-[#1e1e1e] h-14 flex items-center justify-between px-4 border-b border-gray-800 shrink-0'>
             <button 
               onClick={() => setIsPreviewOpen(false)} 
@@ -94,7 +167,6 @@ export default function MobileDock() {
             
             <span className='text-sm font-semibold tracking-wide'>Preview.app</span>
             
-            {/* Botón para abrir el PDF nativo en el navegador móvil por si quieren descargarlo */}
             <button 
               onClick={() => window.open(activeDoc === 'cv' ? '/cv-david.pdf' : '/carta-john-deere.pdf', '_blank')}
               className='p-2 rounded-full bg-blue-600/20 text-blue-400 active:scale-95 transition-all'
@@ -104,7 +176,6 @@ export default function MobileDock() {
             </button>
           </div>
 
-          {/* Selector de pestañas optimizado para dedos */}
           <div className='bg-[#1a1a1a] p-2 flex border-b border-gray-900 shrink-0 gap-2'>
             <button
               onClick={() => setActiveDoc('cv')}
@@ -122,7 +193,6 @@ export default function MobileDock() {
             </button>
           </div>
 
-          {/* Contenedor del documento táctil */}
           <div className='flex-1 bg-[#121212] overflow-hidden relative'>
             {activeDoc === 'cv' ? (
               <iframe 

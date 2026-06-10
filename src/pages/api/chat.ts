@@ -61,6 +61,8 @@ export const POST: APIRoute = async ({ request }) => {
       Posteriormente opté por el Grado Superior de Desarrollo de Aplicaciones Web (DAW), donde aprendí todos los conceptos de la programación y el desarrollo tanto cliente y servidor, realizando las prácticas en Performance Time, desarrollando una web informativa y llevando la gestión de un Ecommerce. 
 
       Ahora, en mi actualidad me licencié en un máster de ciberseguridad y ciberinteligencia en Cadel Formación, donde me adentro más al mundo de la auditoría y detección de amenazas que hoy en día es un criterio muy importante para la seguridad digital. Aparte estoy realizando proyectos propios, desarrollando software, y trabajando para impulsar mis ideas en realidad, pero esa es otra historia que hará cambiar esta descripción... 🚀🌐
+      
+      API: La API de cohere, explica que es, que modelo usas, y sus beneficios
 
       CRITICAL RULES:
       1. Always reply in the SAME language the user is using (Spanish or English).

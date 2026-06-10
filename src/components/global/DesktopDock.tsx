@@ -1,16 +1,17 @@
 import { useState } from 'react';
-import { BsGithub, BsSpotify } from 'react-icons/bs';
+import { BsGithub } from 'react-icons/bs';
 import { IoIosMail } from 'react-icons/io';
-import { IoDocumentText, IoClose } from 'react-icons/io5';
-import { VscVscode, VscFiles, VscSettingsGear, VscSourceControl } from 'react-icons/vsc'; 
-import { RiTerminalFill, RiAwardLine } from 'react-icons/ri'; // <-- Añadido icono de premio/reconocimiento
+import { IoDocumentText, IoClose, IoFolderOutline, IoLogoPython, IoCodeSlash } from 'react-icons/io5';
+import { VscVscode, VscFiles, VscSettingsGear, VscSourceControl, VscFolderActive } from 'react-icons/vsc'; 
+import { RiTerminalFill, RiAwardLine } from 'react-icons/ri'; 
 
 export default function DesktopDock() {
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isVSCodeOpen, setIsVSCodeOpen] = useState(false); 
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false); // <-- Nuevo estado para el visor de documentos de Mac
-  const [activeDoc, setActiveDoc] = useState<'cv' | 'johndeere'>('cv'); // <-- Alternador de documento activo
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false); 
+  const [isFinderOpen, setIsFinderOpen] = useState(false); // <-- Nuevo estado para el Explorador de Proyectos
+  const [activeDoc, setActiveDoc] = useState<'cv' | 'johndeere'>('cv'); 
 
   const handleEmailClick = () => {
     window.location.href = 'mailto:ortegadorado1@gmail.com';
@@ -20,9 +21,23 @@ export default function DesktopDock() {
     window.open('https://github.com/david-rtd', '_blank');
   };
 
-  const handleSpotifyClick = () => {
-    window.open('https://open.spotify.com', '_blank');
-  };
+  // --- MATRIZ DE TUS PROYECTOS DE GITHUB ---
+  const projects = [
+    {
+      name: 'doglog',
+      description: 'Linux Log Watchdog & Incident Response (IDS) en Python con alertas de Telegram.',
+      url: 'https://github.com/david-rtd/doglog', // Cambia si tu repo tiene otro nombre
+      icon: <IoLogoPython size={20} className="text-yellow-500" />,
+      tag: 'Cybersecurity'
+    },
+    {
+      name: 'Mi portfolio',
+      description: 'Portfolio web interactivo con diseño e interfaz de entorno de escritorio macOS.',
+      url: 'https://github.com/david-rtd', 
+      icon: <IoCodeSlash size={20} className="text-blue-400" />,
+      tag: 'Full-Stack'
+    }
+  ];
 
   const routine = [
     { time: '08:00 - 10:00', activity: '☕ Cyber Threat Intelligence / Coffee', color: 'bg-amber-500/20 border-amber-500 text-amber-300' },
@@ -83,10 +98,23 @@ export default function DesktopDock() {
               <div className='w-14 h-14 bg-gradient-to-t from-black to-black/60 rounded-xl flex items-center justify-center shadow-lg'>
                 <BsGithub size={45} className='text-gray-100' />
               </div>
-              {hoveredIcon === 'github' && <Tooltip text='My GitHub' />}
+              {hoveredIcon === 'github' && <Tooltip text='My GitHub Profile' />}
             </button>
 
-            {/* Visor de Documentos (Antes solo abría CV en pestaña) */}
+            {/* Finder: Explorador de Proyectos (REEMPLAZA A SPOTIFY) */}
+            <button
+              onClick={() => setIsFinderOpen(true)}
+              onMouseEnter={() => setHoveredIcon('finder')}
+              onMouseLeave={() => setHoveredIcon(null)}
+              className='relative'
+            >
+              <div className='w-14 h-14 bg-gradient-to-t from-gray-200 to-gray-400 rounded-xl flex items-center justify-center shadow-lg border border-white/10'>
+                <IoFolderOutline size={45} className='text-blue-600' />
+              </div>
+              {hoveredIcon === 'finder' && <Tooltip text='Projects Explorer' />}
+            </button>
+
+            {/* Visor de Documentos */}
             <button
               onClick={() => setIsPreviewOpen(true)}
               onMouseEnter={() => setHoveredIcon('cv')}
@@ -122,19 +150,6 @@ export default function DesktopDock() {
               {hoveredIcon === 'calendar' && <Tooltip text='View My Routine' />}
             </button>
 
-            {/* Spotify */}
-            <button
-              onClick={handleSpotifyClick}
-              onMouseEnter={() => setHoveredIcon('spotify')}
-              onMouseLeave={() => setHoveredIcon(null)}
-              className='relative'
-            >
-              <div className='w-14 h-14 bg-gradient-to-t from-black to-black/60 rounded-xl flex items-center justify-center shadow-lg'>
-                <BsSpotify size={45} className='text-[#1ED760]' />
-              </div>
-              {hoveredIcon === 'spotify' && <Tooltip text='My Dev Playlist' />}
-            </button>
-
             {/* Divider */}
             <div className='flex items-center'>
               <div className='w-px h-14 bg-white/20' />
@@ -159,6 +174,76 @@ export default function DesktopDock() {
           </div>
         </div>
       </div>
+
+      {/* --- MODAL: FINDER / EXPLORADOR DE PROYECTOS (NUEVO) --- */}
+      {isFinderOpen && (
+        <div className='fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 transition-opacity duration-200'>
+          <div className='bg-[#1e1e1e] border border-gray-700 w-full max-w-2xl h-[400px] rounded-xl overflow-hidden shadow-2xl flex flex-col font-sans text-white transform-gpu transition-transform duration-200'>
+            
+            {/* Barra superior macOS */}
+            <div className='bg-[#2d2d2d] h-10 flex items-center justify-between px-4 border-b border-gray-800 select-none shrink-0'>
+              <div className='flex items-center space-x-2'>
+                <button 
+                  onClick={() => setIsFinderOpen(false)} 
+                  className='w-3 h-3 rounded-full bg-red-500 flex items-center justify-center group hover:bg-red-600 transition-colors'
+                >
+                  <IoClose size={8} className='text-black/70 opacity-0 group-hover:opacity-100' />
+                </button>
+                <div className='w-3 h-3 rounded-full bg-yellow-500'></div>
+                <div className='w-3 h-3 rounded-full bg-green-500'></div>
+              </div>
+              <span className='text-xs font-medium text-gray-400'>Finder.app — Proyectos GitHub</span>
+              <div className='w-14'></div>
+            </div>
+
+            {/* Cuerpo del Finder */}
+            <div className='flex flex-1 overflow-hidden w-full'>
+              {/* Barra lateral izquierda */}
+              <div className='w-40 bg-[#252526] p-3 hidden sm:flex flex-col shrink-0 border-r border-gray-800 select-none text-gray-400'>
+                <span className='text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-3'>Favoritos</span>
+                <div className='text-gray-200 font-medium text-xs px-2 py-1.5 bg-[#37373d]/50 rounded-lg flex items-center gap-2'>
+                  <VscFolderActive className="text-blue-500" size={16} /> Proyectos
+                </div>
+                <div onClick={handleGithubClick} className='text-gray-400 font-medium text-xs px-2 py-1.5 hover:bg-[#37373d]/30 rounded-lg flex items-center gap-2 mt-1 cursor-pointer transition-colors'>
+                  <BsGithub size={14} /> Ir a GitHub
+                </div>
+              </div>
+
+              {/* Vista de cuadrícula de repositorios */}
+              <div className='flex-1 bg-[#1e1e1e] p-5 overflow-y-auto'>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                  {projects.map((project, index) => (
+                    <div
+                      key={index}
+                      onClick={() => window.open(project.url, '_blank')}
+                      className='bg-[#2d2d2d] border border-gray-700/60 p-4 rounded-xl hover:border-blue-500/70 hover:bg-[#333334] transition-all cursor-pointer group flex flex-col justify-between shadow-sm'
+                    >
+                      <div>
+                        <div className='flex items-center justify-between mb-2'>
+                          <div className='flex items-center gap-2 font-mono text-sm font-semibold text-blue-400 group-hover:text-blue-300'>
+                            {project.icon}
+                            {project.name}
+                          </div>
+                          <span className='text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#1a1a1a] text-gray-400 border border-gray-700'>
+                            {project.tag}
+                          </span>
+                        </div>
+                        <p className='text-xs text-gray-400 font-sans leading-relaxed'>
+                          {project.description}
+                        </p>
+                      </div>
+                      <div className='text-[10px] text-blue-500 font-medium mt-4 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1 font-sans'>
+                        Ver repositorio externo {'➔'}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
 
       {/* --- MODAL: CALENDARIO DE RUTINA --- */}
       {isCalendarOpen && (
@@ -195,12 +280,10 @@ export default function DesktopDock() {
         </div>
       )}
 
-      {/* --- MODAL: PREVIEW.APP (NUEVO VISOR INCORPORADO PARA CV Y CARTA JOHN DEERE) --- */}
+      {/* --- MODAL: PREVIEW.APP --- */}
       {isPreviewOpen && (
         <div className='fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 transition-opacity duration-200'>
           <div className='bg-[#1e1e1e] border border-gray-700 w-full max-w-4xl h-[80vh] rounded-xl overflow-hidden shadow-2xl flex flex-col font-sans text-white transform-gpu transition-transform duration-200'>
-            
-            {/* Barra superior macOS */}
             <div className='bg-[#2d2d2d] h-10 flex items-center justify-between px-4 border-b border-gray-800 select-none shrink-0'>
               <div className='flex items-center space-x-2'>
                 <button 
@@ -213,7 +296,6 @@ export default function DesktopDock() {
                 <div className='w-3 h-3 rounded-full bg-green-500'></div>
               </div>
               
-              {/* Pestañas de Navegación del Visor */}
               <div className='flex space-x-1 bg-[#1a1a1a] p-1 rounded-lg border border-gray-800'>
                 <button
                   onClick={() => setActiveDoc('cv')}
@@ -234,7 +316,6 @@ export default function DesktopDock() {
               <span className='text-xs text-gray-500 font-normal hidden sm:inline'>Preview.app</span>
             </div>
 
-            {/* Contenedor del Documento PDF Activo */}
             <div className='flex-1 bg-[#121212] p-2 relative'>
               {activeDoc === 'cv' ? (
                 <iframe 
@@ -258,8 +339,6 @@ export default function DesktopDock() {
       {isVSCodeOpen && (
         <div className='fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 transition-opacity duration-200'>
           <div className='bg-[#1e1e1e] border border-gray-700 w-full max-w-2xl h-[450px] rounded-xl overflow-hidden shadow-2xl flex flex-col font-mono text-xs text-gray-300 transform-gpu transition-transform duration-200'>
-            
-            {/* Barra superior estilo Mac */}
             <div className='bg-[#323233] h-9 flex items-center justify-between px-4 border-b border-[#252526] select-none shrink-0'>
               <div className='flex items-center space-x-2'>
                 <button 
@@ -274,10 +353,7 @@ export default function DesktopDock() {
               <div className='w-14'></div>
             </div>
 
-            {/* Espacio de trabajo de VS Code */}
             <div className='flex flex-1 overflow-hidden w-full'>
-              
-              {/* 1. Barra de actividad lateral izquierda */}
               <div className='w-12 bg-[#333333] border-r border-[#252526] flex flex-col items-center justify-between py-4 text-gray-400 shrink-0 select-none'>
                 <div className='flex flex-col items-center space-y-6 w-full'>
                   <div className='text-white border-l-2 border-blue-500 w-full flex justify-center py-0.5 cursor-pointer'><VscFiles size={22} /></div>
@@ -286,7 +362,6 @@ export default function DesktopDock() {
                 <div className='hover:text-white transition-colors cursor-pointer'><VscSettingsGear size={20} /></div>
               </div>
 
-              {/* 2. Explorador de archivos */}
               <div className='w-44 bg-[#252526] border-r border-[#1e1e1e] p-3 hidden sm:flex flex-col shrink-0 select-none text-gray-400 font-sans'>
                 <span className='text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3'>Explorer</span>
                 <div className='text-gray-200 font-semibold text-xs mb-1 truncate'>📁 PORTFOLIO-DAVID</div>
@@ -301,40 +376,35 @@ export default function DesktopDock() {
                 </div>
               </div>
 
-              {/* 3. Editor de código principal */}
               <div className='flex-1 bg-[#1e1e1e] flex flex-col overflow-hidden'>
-                {/* Pestaña del archivo */}
                 <div className='bg-[#2d2d2d] h-8 flex items-center px-3 border-b border-[#1e1e1e] shrink-0 select-none'>
                   <div className='bg-[#1e1e1e] text-gray-200 h-full px-4 flex items-center border-t border-blue-500 text-xs font-sans gap-2'>
                     <span className='text-blue-400 font-bold'>TS</span> profile.ts
                   </div>
                 </div>
 
-                {/* Código */}
                 <div className='p-4 overflow-y-auto flex-1 font-mono text-xs leading-relaxed text-gray-300 antialiased selection:bg-blue-500/30'>
-		  <div className='flex space-x-4'>
-		    {/* Números de línea */}
-		    <div className='text-gray-600 text-right select-none pr-1 space-y-0.5 font-sans text-[11px]'>
-		      <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div>
-		    </div>
-		    {/* Código formateado - CORREGIDO */}
-		    <div className='whitespace-pre font-mono tracking-wide overflow-x-auto w-full space-y-0.5'>
-		      <div><span className='text-purple-400'>export const</span> <span className='text-blue-300'>developer</span> = {'{'}</div>
-		      <div>  name: <span className='text-orange-300'>'David'</span>,</div>
-		      <div>  role: <span className='text-orange-300'>'Cybersecurity & Full Stack'</span>,</div>
-		      <div>  tools: [<span className='text-orange-300'>'Astro'</span>, <span className='text-orange-300'>'React'</span>, <span className='text-orange-300'>'Node'</span>],</div>
-		      <div>  security: {'{'}</div>
-		      <div>    testing: [<span className='text-orange-300'>'Pentesting'</span>, <span className='text-orange-300'>'OWASP'</span>],</div>
-		      <div>    scanners: [<span className='text-orange-300'>'Nmap'</span>, <span className='text-orange-300'>'Burp Suite'</span>]</div>
-		      <div>  {'}'},</div>
-		      <div>  status: <span className='text-orange-300'>'Building secure systems'</span>,</div>
-		      <div>  motto: () <span className='text-purple-400'>=&gt;</span> {'{'}</div>
-		      <div>    <span className='text-purple-400'>return</span> <span className='text-green-300'>`Code fast, patch faster.`</span>;</div>
-		      <div>  {'}'}</div>
-		      <div>{'}'};</div>
-		    </div>
-		  </div>
-		</div>
+                  <div className='flex space-x-4'>
+                    <div className='text-gray-600 text-right select-none pr-1 space-y-0.5 font-sans text-[11px]'>
+                      <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div>
+                    </div>
+                    <div className='whitespace-pre font-mono tracking-wide overflow-x-auto w-full space-y-0.5'>
+                      <div><span className='text-purple-400'>export const</span> <span className='text-blue-300'>developer</span> = {'{'}</div>
+                      <div>  name: <span className='text-orange-300'>'David'</span>,</div>
+                      <div>  role: <span className='text-orange-300'>'Cybersecurity & Full Stack'</span>,</div>
+                      <div>  tools: [<span className='text-orange-300'>'Astro'</span>, <span className='text-orange-300'>'React'</span>, <span className='text-orange-300'>'Node'</span>],</div>
+                      <div>  security: {'{'}</div>
+                      <div>    testing: [<span className='text-orange-300'>'Pentesting'</span>, <span className='text-orange-300'>'OWASP'</span>],</div>
+                      <div>    scanners: [<span className='text-orange-300'>'Nmap'</span>, <span className='text-orange-300'>'Burp Suite'</span>]</div>
+                      <div>  {'}'},</div>
+                      <div>  status: <span className='text-orange-300'>'Building secure systems'</span>,</div>
+                      <div>  motto: () <span className='text-purple-400'>={'>'}</span> {'{'}</div>
+                      <div>    <span className='text-purple-400'>return</span> <span className='text-green-300'>`Code fast, patch faster.`</span>;</div>
+                      <div>  {'}'}</div>
+                      <div>{'}'};</div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
             </div>
