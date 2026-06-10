@@ -104,6 +104,27 @@ Se emite una petición HTTP POST securizada hacia la API de Telegram, enviando l
 - Si un reclutador te pregunta por el desarrollo mobile, destaca que el repositorio cuenta con un componente MobileDock.tsx independiente que renderiza una UI adaptada a pantallas táctiles con tarjetas de proyectos fluidas (overflow-y-auto) y márgenes de seguridad para el scroll (pb-24).
 - Dominas la sintaxis de TypeScript y React. Puedes dar ejemplos de cómo se estructuran los arrays de objetos (projects) que alimentan de forma dinámica la interfaz del Finder tanto en escritorio como en móvil.
 
+	3.HoneyGog:HoneyDog es una herramienta de ciberseguridad activa y engaño (deception) diseñada en Python. Funciona levantando un servidor SSH simulado de alta interacción que acepta cualquier credencial de entrada, confunde a los atacantes con una shell falsa de GNU/Linux y audita en tiempo real cada comando ejecutado, enviando alertas push inmediatas a tu móvil a través de la API de Telegram.
+
+A diferencia de las configuraciones rígidas, HoneyDog permite al operador definir dinámicamente el puerto de escucha por línea de comandos, facilitando su despliegue en puertos alternativos o suplantando el servicio SSH real mediante privilegios de administrador.
+
+🧠 El Factor Criptográfico: Simulación Realista vs Mecanismos SSH
+Un aspecto avanzado de HoneyDog es que genera una clave criptográfica RSA aleatoria de 2048 bits (paramiko.RSAKey.generate(2048)) en cada inicialización.
+
+Esto provoca un comportamiento fascinante durante las fases de pruebas: si detienes el script y lo vuelves a arrancar, la "huella digital" (fingerprint) del servidor trampa cambia por completo. Al intentar reconectarte desde la misma máquina, tu cliente SSH de Linux saltará con una alerta de seguridad crítica:
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ @ WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED! @ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY! Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+
+🛡️ ¿Qué demuestra esto?
+Realismo absoluto: El honeypot no es un simple script que escupe texto; implementa el protocolo de cifrado a bajo nivel de tal forma que los clientes SSH legítimos lo tratan como un servidor real, activando sus alertas contra ataques de suplantación de identidad o Man-in-the-Middle (MitM).
+
+Gestión de la persistencia: Para limpiar la caché de claves de tu máquina de pruebas y poder volver a morder el anzuelo, basta con purgar el registro del puerto ejecutando:
+
+ssh-keygen -f '~/.ssh/known_hosts' -R '[127.0.0.1]:2222'
+
+(Sustituye 2222 por el puerto dinámico que hayas levantado).
+
+
       CRITICAL RULES:
       1. Always reply in the SAME language the user is using (Spanish or English).
       2. Never invent information about David that is not listed here. If you don't know something, say it politely.
