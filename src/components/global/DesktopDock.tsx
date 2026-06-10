@@ -425,9 +425,9 @@ export default function DesktopDock() {
                       <div><span className='text-purple-400'>export const</span> <span className='text-blue-300'>developer</span> = {'{'}</div>
                       <div>  name: <span className='text-orange-300'>'David'</span>,</div>
                       <div>  role: <span className='text-orange-300'>'Cybersecurity & Full Stack'</span>,</div>
-                      <div>  tools: [<span className='text-orange-300'>'Astro'</span>, <span className='text-orange-300'>'React'</span>, <span className='text-orange-300'>'Node'</span>, <span className='text-orange-300'>'python'</span>],</div>
+                      <div>  tools: [<span className='text-orange-300'>'Astro'</span>, <span className='text-orange-300'>'React'</span>, <span className='text-orange-300'>'Node'</span>, <span className='text-orange-300'>'Python'</span>],</div>
                       <div>  security: {'{'}</div>
-                      <div>    testing: [<span className='text-orange-300'>'Pentesting'</span>, <span className='text-orange-300'>'OWASP'</span>],</div>
+                      <div>    testing: [<span className='text-orange-300'>'Pentesting'</span>, <span className='text-orange-300'>'OWASP'</span>, <span className='text-orange-300'>'Kali Linux'</span>],</div>
                       <div>    scanners: [<span className='text-orange-300'>'Nmap'</span>, <span className='text-orange-300'>'Burp Suite'</span>]</div>
                       <div>  {'}'},</div>
                       <div>  status: <span className='text-orange-300'>'Building secure systems'</span>,</div>
