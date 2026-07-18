@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
 import node from '@astrojs/node'; // <-- Cambiado: Importamos Node en lugar de Vercel
@@ -31,9 +32,7 @@ export default defineConfig({
 
   // Deployment configuration
   output: 'server', // Server-side rendering - Requerido para tu API de Cohere
-  adapter: node({   // <-- Cambiado: Configurado para que Railway cree un servidor Node estable
-    mode: 'standalone',
-  }),
+  adapter: vercel(),
   devToolbar: {
     enabled: false,
   },
