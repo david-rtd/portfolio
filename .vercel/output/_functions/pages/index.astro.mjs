@@ -995,10 +995,6 @@ const $$LandingPage = createComponent(async ($$result, $$props, $$slots) => {
     "bg-2": "/images/mac-background2.jpg",
     "bg-3": "/images/mac-background3.jpg"
   };
-  function getRandomBackground() {
-    const keys = Object.keys(backgroundMap);
-    return keys[Math.floor(Math.random() * keys.length)];
-  }
   await Promise.all(
     backgrounds.map(
       (bg) => getImage({

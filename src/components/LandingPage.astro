@@ -1,5 +1,5 @@
 ---
-export const prerender = false;
+export const prerender = true;
 import { getImage } from 'astro:assets';
 import AppLayout from '../layouts/AppLayout';
 const backgroundMap = {
@@ -7,12 +7,6 @@ const backgroundMap = {
   'bg-2': '/images/mac-background2.jpg',
   'bg-3': '/images/mac-background3.jpg'
 };
-
-// 2. Función para elegir un fondo aleatorio entre 'bg-1', 'bg-2' o 'bg-3'
-function getRandomBackground() {
-  const keys = Object.keys(backgroundMap);
-  return keys[Math.floor(Math.random() * keys.length)];
-}
 
 const optimizedBackgrounds = await Promise.all(
   backgrounds.map((bg) =>
