@@ -1,7 +1,8 @@
-import { c as createAstro, a as createComponent, r as renderComponent, b as addAttribute, d as renderTemplate, e as renderHead, f as renderSlot } from '../chunks/astro/server_BDP7g7JS.mjs';
+import { e as createAstro, f as createComponent, k as renderComponent, r as renderTemplate, u as unescapeHTML, l as Fragment, h as addAttribute, n as renderHead, o as renderSlot } from '../chunks/astro/server_BPQUcEYu.mjs';
 import 'piccolore';
-import { a as getImage } from '../chunks/_astro_assets_CgYCaAa_.mjs';
-import { jsxs, Fragment, jsx } from 'react/jsx-runtime';
+/* empty css                                 */
+import { escape } from 'html-escaper';
+import { jsxs, Fragment as Fragment$1, jsx } from 'react/jsx-runtime';
 import { useState, useEffect, useRef } from 'react';
 import { MdWifi } from 'react-icons/md';
 import { FaApple } from 'react-icons/fa';
@@ -13,20 +14,441 @@ import { IoIosMail } from 'react-icons/io';
 import { RiAwardLine, RiTerminalFill } from 'react-icons/ri';
 export { renderers } from '../renderers.mjs';
 
+const createMetaTag = (attributes) => {
+  const attrs = Object.entries(attributes).map(([key, value]) => `${key}="${escape(value)}"`).join(" ");
+  return `<meta ${attrs}>`;
+};
+const createLinkTag = (attributes) => {
+  const attrs = Object.entries(attributes).map(([key, value]) => `${key}="${escape(value)}"`).join(" ");
+  return `<link ${attrs}>`;
+};
+const createOpenGraphTag = (property, content) => {
+  return createMetaTag({ property: `og:${property}`, content });
+};
+const buildOpenGraphMediaTags = (mediaType, media) => {
+  let tags = "";
+  const addTag = (tag) => {
+    tags += tag + "\n";
+  };
+  media.forEach((medium) => {
+    addTag(createOpenGraphTag(mediaType, medium.url));
+    if (medium.alt) {
+      addTag(createOpenGraphTag(`${mediaType}:alt`, medium.alt));
+    }
+    if (medium.secureUrl) {
+      addTag(createOpenGraphTag(`${mediaType}:secure_url`, medium.secureUrl));
+    }
+    if (medium.type) {
+      addTag(createOpenGraphTag(`${mediaType}:type`, medium.type));
+    }
+    if (medium.width) {
+      addTag(createOpenGraphTag(`${mediaType}:width`, medium.width.toString()));
+    }
+    if (medium.height) {
+      addTag(
+        createOpenGraphTag(`${mediaType}:height`, medium.height.toString())
+      );
+    }
+  });
+  return tags;
+};
+const buildTags = (config) => {
+  let tagsToRender = "";
+  const addTag = (tag) => {
+    tagsToRender += tag + "\n";
+  };
+  if (config.title) {
+    const formattedTitle = config.titleTemplate ? config.titleTemplate.replace("%s", config.title) : config.title;
+    addTag(`<title>${escape(formattedTitle)}</title>`);
+  }
+  if (config.description) {
+    addTag(createMetaTag({ name: "description", content: config.description }));
+  }
+  let robotsContent = [];
+  if (typeof config.noindex !== "undefined") {
+    robotsContent.push(config.noindex ? "noindex" : "index");
+  }
+  if (typeof config.nofollow !== "undefined") {
+    robotsContent.push(config.nofollow ? "nofollow" : "follow");
+  }
+  if (config.robotsProps) {
+    const {
+      nosnippet,
+      maxSnippet,
+      maxImagePreview,
+      noarchive,
+      unavailableAfter,
+      noimageindex,
+      notranslate
+    } = config.robotsProps;
+    if (nosnippet) robotsContent.push("nosnippet");
+    if (typeof maxSnippet === "number") robotsContent.push(`max-snippet:${maxSnippet}`);
+    if (maxImagePreview)
+      robotsContent.push(`max-image-preview:${maxImagePreview}`);
+    if (noarchive) robotsContent.push("noarchive");
+    if (unavailableAfter)
+      robotsContent.push(`unavailable_after:${unavailableAfter}`);
+    if (noimageindex) robotsContent.push("noimageindex");
+    if (notranslate) robotsContent.push("notranslate");
+  }
+  if (robotsContent.length > 0) {
+    addTag(createMetaTag({ name: "robots", content: robotsContent.join(",") }));
+  }
+  if (config.canonical) {
+    addTag(createLinkTag({ rel: "canonical", href: config.canonical }));
+  }
+  if (config.mobileAlternate) {
+    addTag(
+      createLinkTag({
+        rel: "alternate",
+        media: config.mobileAlternate.media,
+        href: config.mobileAlternate.href
+      })
+    );
+  }
+  if (config.languageAlternates && config.languageAlternates.length > 0) {
+    config.languageAlternates.forEach((languageAlternate) => {
+      addTag(
+        createLinkTag({
+          rel: "alternate",
+          hreflang: languageAlternate.hreflang,
+          href: languageAlternate.href
+        })
+      );
+    });
+  }
+  if (config.openGraph) {
+    const title = config.openGraph?.title || config.title;
+    if (title) {
+      addTag(createOpenGraphTag("title", title));
+    }
+    const description = config.openGraph?.description || config.description;
+    if (description) {
+      addTag(createOpenGraphTag("description", description));
+    }
+    if (config.openGraph.url) {
+      addTag(createOpenGraphTag("url", config.openGraph.url));
+    }
+    if (config.openGraph.type) {
+      addTag(createOpenGraphTag("type", config.openGraph.type));
+    }
+    if (config.openGraph.images && config.openGraph.images.length) {
+      addTag(buildOpenGraphMediaTags("image", config.openGraph.images));
+    }
+    if (config.openGraph.videos && config.openGraph.videos.length) {
+      addTag(buildOpenGraphMediaTags("video", config.openGraph.videos));
+    }
+    if (config.openGraph.locale) {
+      addTag(createOpenGraphTag("locale", config.openGraph.locale));
+    }
+    if (config.openGraph.site_name) {
+      addTag(createOpenGraphTag("site_name", config.openGraph.site_name));
+    }
+    if (config.openGraph.profile) {
+      if (config.openGraph.profile.firstName) {
+        addTag(
+          createOpenGraphTag(
+            "profile:first_name",
+            config.openGraph.profile.firstName
+          )
+        );
+      }
+      if (config.openGraph.profile.lastName) {
+        addTag(
+          createOpenGraphTag(
+            "profile:last_name",
+            config.openGraph.profile.lastName
+          )
+        );
+      }
+      if (config.openGraph.profile.username) {
+        addTag(
+          createOpenGraphTag(
+            "profile:username",
+            config.openGraph.profile.username
+          )
+        );
+      }
+      if (config.openGraph.profile.gender) {
+        addTag(
+          createOpenGraphTag("profile:gender", config.openGraph.profile.gender)
+        );
+      }
+    }
+    if (config.openGraph.book) {
+      if (config.openGraph.book.authors && config.openGraph.book.authors.length) {
+        config.openGraph.book.authors.forEach((author) => {
+          addTag(createOpenGraphTag("book:author", author));
+        });
+      }
+      if (config.openGraph.book.isbn) {
+        addTag(createOpenGraphTag("book:isbn", config.openGraph.book.isbn));
+      }
+      if (config.openGraph.book.releaseDate) {
+        addTag(
+          createOpenGraphTag(
+            "book:release_date",
+            config.openGraph.book.releaseDate
+          )
+        );
+      }
+      if (config.openGraph.book.tags && config.openGraph.book.tags.length) {
+        config.openGraph.book.tags.forEach((tag) => {
+          addTag(createOpenGraphTag("book:tag", tag));
+        });
+      }
+    }
+    if (config.openGraph.article) {
+      if (config.openGraph.article.publishedTime) {
+        addTag(
+          createOpenGraphTag(
+            "article:published_time",
+            config.openGraph.article.publishedTime
+          )
+        );
+      }
+      if (config.openGraph.article.modifiedTime) {
+        addTag(
+          createOpenGraphTag(
+            "article:modified_time",
+            config.openGraph.article.modifiedTime
+          )
+        );
+      }
+      if (config.openGraph.article.expirationTime) {
+        addTag(
+          createOpenGraphTag(
+            "article:expiration_time",
+            config.openGraph.article.expirationTime
+          )
+        );
+      }
+      if (config.openGraph.article.authors && config.openGraph.article.authors.length) {
+        config.openGraph.article.authors.forEach((author) => {
+          addTag(createOpenGraphTag("article:author", author));
+        });
+      }
+      if (config.openGraph.article.section) {
+        addTag(
+          createOpenGraphTag(
+            "article:section",
+            config.openGraph.article.section
+          )
+        );
+      }
+      if (config.openGraph.article.tags && config.openGraph.article.tags.length) {
+        config.openGraph.article.tags.forEach((tag) => {
+          addTag(createOpenGraphTag("article:tag", tag));
+        });
+      }
+    }
+    if (config.openGraph.video) {
+      if (config.openGraph.video.actors && config.openGraph.video.actors.length) {
+        config.openGraph.video.actors.forEach((actor) => {
+          addTag(createOpenGraphTag("video:actor", actor.profile));
+          if (actor.role) {
+            addTag(createOpenGraphTag("video:actor:role", actor.role));
+          }
+        });
+      }
+      if (config.openGraph.video.directors && config.openGraph.video.directors.length) {
+        config.openGraph.video.directors.forEach((director) => {
+          addTag(createOpenGraphTag("video:director", director));
+        });
+      }
+      if (config.openGraph.video.writers && config.openGraph.video.writers.length) {
+        config.openGraph.video.writers.forEach((writer) => {
+          addTag(createOpenGraphTag("video:writer", writer));
+        });
+      }
+      if (config.openGraph.video.duration) {
+        addTag(
+          createOpenGraphTag(
+            "video:duration",
+            config.openGraph.video.duration.toString()
+          )
+        );
+      }
+      if (config.openGraph.video.releaseDate) {
+        addTag(
+          createOpenGraphTag(
+            "video:release_date",
+            config.openGraph.video.releaseDate
+          )
+        );
+      }
+      if (config.openGraph.video.tags && config.openGraph.video.tags.length) {
+        config.openGraph.video.tags.forEach((tag) => {
+          addTag(createOpenGraphTag("video:tag", tag));
+        });
+      }
+      if (config.openGraph.video.series) {
+        addTag(
+          createOpenGraphTag("video:series", config.openGraph.video.series)
+        );
+      }
+    }
+  }
+  if (config.facebook && config.facebook.appId) {
+    addTag(
+      createMetaTag({ property: "fb:app_id", content: config.facebook.appId })
+    );
+  }
+  if (config.twitter) {
+    if (config.twitter.cardType) {
+      addTag(
+        createMetaTag({
+          name: "twitter:card",
+          content: config.twitter.cardType
+        })
+      );
+    }
+    if (config.twitter.site) {
+      addTag(
+        createMetaTag({ name: "twitter:site", content: config.twitter.site })
+      );
+    }
+    if (config.twitter.handle) {
+      addTag(
+        createMetaTag({
+          name: "twitter:creator",
+          content: config.twitter.handle
+        })
+      );
+    }
+  }
+  if (config.additionalMetaTags && config.additionalMetaTags.length > 0) {
+    config.additionalMetaTags.forEach((metaTag) => {
+      const attributes = {
+        content: metaTag.content
+      };
+      if ("name" in metaTag && metaTag.name) {
+        attributes.name = metaTag.name;
+      } else if ("property" in metaTag && metaTag.property) {
+        attributes.property = metaTag.property;
+      } else if ("httpEquiv" in metaTag && metaTag.httpEquiv) {
+        attributes["http-equiv"] = metaTag.httpEquiv;
+      }
+      addTag(createMetaTag(attributes));
+    });
+  }
+  if (config.additionalLinkTags && config.additionalLinkTags.length > 0) {
+    config.additionalLinkTags.forEach((linkTag) => {
+      const attributes = {
+        rel: linkTag.rel,
+        href: linkTag.href
+      };
+      if (linkTag.sizes) {
+        attributes.sizes = linkTag.sizes;
+      }
+      if (linkTag.media) {
+        attributes.media = linkTag.media;
+      }
+      if (linkTag.type) {
+        attributes.type = linkTag.type;
+      }
+      if (linkTag.color) {
+        attributes.color = linkTag.color;
+      }
+      if (linkTag.as) {
+        attributes.as = linkTag.as;
+      }
+      if (linkTag.crossOrigin) {
+        attributes.crossorigin = linkTag.crossOrigin;
+      }
+      addTag(createLinkTag(attributes));
+    });
+  }
+  return tagsToRender.trim();
+};
+
+const $$Astro$2 = createAstro("https://example.com");
+const $$AstroSeo = createComponent(($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro$2, $$props, $$slots);
+  Astro2.self = $$AstroSeo;
+  const {
+    title,
+    titleTemplate,
+    noindex,
+    nofollow,
+    robotsProps,
+    description,
+    canonical,
+    mobileAlternate,
+    languageAlternates,
+    openGraph,
+    facebook,
+    twitter,
+    additionalMetaTags,
+    additionalLinkTags
+  } = Astro2.props;
+  return renderTemplate`${renderComponent($$result, "Fragment", Fragment, {}, { "default": ($$result2) => renderTemplate`${unescapeHTML(buildTags({
+    title,
+    titleTemplate,
+    noindex,
+    nofollow,
+    robotsProps,
+    description,
+    canonical,
+    mobileAlternate,
+    languageAlternates,
+    openGraph,
+    facebook,
+    twitter,
+    additionalMetaTags,
+    additionalLinkTags
+  }))}` })}`;
+}, "/home/fedora-david/Portfolio/macos-terminal-portfolio/node_modules/@astrolib/seo/src/AstroSeo.astro", void 0);
+
+const macBackground1 = new Proxy({"src":"/_astro/mac-background1.BN3pAP-K.jpg","width":6016,"height":3384,"format":"jpg","orientation":1}, {
+						get(target, name, receiver) {
+							if (name === 'clone') {
+								return structuredClone(target);
+							}
+							if (name === 'fsPath') {
+								return "/home/fedora-david/Portfolio/macos-terminal-portfolio/src/assets/images/mac-background1.jpg";
+							}
+							
+							return target[name];
+						}
+					});
+
+const macBackground2 = new Proxy({"src":"/_astro/mac-background2.DAWzICtV.jpg","width":6016,"height":3384,"format":"jpg","orientation":1}, {
+						get(target, name, receiver) {
+							if (name === 'clone') {
+								return structuredClone(target);
+							}
+							if (name === 'fsPath') {
+								return "/home/fedora-david/Portfolio/macos-terminal-portfolio/src/assets/images/mac-background2.jpg";
+							}
+							
+							return target[name];
+						}
+					});
+
+const macBackground3 = new Proxy({"src":"/_astro/mac-background3.D2uWT5Yk.jpg","width":6016,"height":3384,"format":"jpg","orientation":1}, {
+						get(target, name, receiver) {
+							if (name === 'clone') {
+								return structuredClone(target);
+							}
+							if (name === 'fsPath') {
+								return "/home/fedora-david/Portfolio/macos-terminal-portfolio/src/assets/images/mac-background3.jpg";
+							}
+							
+							return target[name];
+						}
+					});
+
 const $$Astro$1 = createAstro("https://example.com");
 const $$BaseHead = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$1, $$props, $$slots);
   Astro2.self = $$BaseHead;
-  return renderTemplate`import '../../styles/global.css';
-import ${AstroSeo} from '@astrolib/seo';
-
-// Definimos el array estático una sola vez
-const backgrounds = [
-  '/images/mac-background1.jpg',
-  '/images/mac-background2.jpg',
-  '/images/mac-background3.jpg'
-];
-<!-- Core meta tags --> <meta charset="UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> <meta name="author" content="David Ortega Dorado"> <!-- SEO Configuration --> ${renderComponent($$result, "AstroSeo", AstroSeo, { "title": Astro2.props.title || "David Ortega Dorado", "description": Astro2.props.description || "Full Stack Developer based in Austin, TX specializing in React, Node.js, and modern web technologies", "canonical": Astro2.props.canonical || "https://ortegadorado.com", "openGraph": {
+  const backgrounds = [
+    macBackground1.src,
+    macBackground2.src,
+    macBackground3.src
+  ];
+  return renderTemplate`<!-- Core meta tags --><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="author" content="David Ortega Dorado"><!-- SEO Configuration -->${renderComponent($$result, "AstroSeo", $$AstroSeo, { "title": Astro2.props.title || "David Ortega Dorado", "description": Astro2.props.description || "Full Stack Developer based in Austin, TX specializing in React, Node.js, and modern web technologies", "canonical": Astro2.props.canonical || "https://ortegadorado.com", "openGraph": {
     url: Astro2.props.openGraph?.url || "https://ortegadorado.com",
     title: Astro2.props.openGraph?.title || "David Ortega Dorado",
     description: Astro2.props.openGraph?.description || "I am a Full Stack developer with experience in React, Next.js, Fastify Node.js, SupaBase, Prisma ORM, Railways among other tools...",
@@ -36,7 +458,7 @@ const backgrounds = [
       }
     ],
     site_name: Astro2.props.openGraph?.site_name || "David Ortega Dorado"
-  } })} <!-- Favicon files --> <link rel="apple-touch-icon" sizes="180x180" href="/images/favi.png"> <link rel="icon" type="image/png" sizes="32x32" href="/images/favi.png"> <link rel="icon" type="image/png" sizes="16x16" href="/images/favi.png"> <!-- Theme colors for browsers --> <meta name="msapplication-TileColor" content="YOUR_COLOR_HEX"> <meta name="theme-color" content="YOUR_COLOR_HEX"> <!-- Auto-generated sitemap --> <link rel="sitemap" href="/sitemap-index.xml"> <!-- Preload background images for performance --> ${backgrounds.map((src) => renderTemplate`<link rel="preload"${addAttribute(src, "href")} as="image" fetchpriority="high">`)}`;
+  } })}<!-- Favicon files --><link rel="apple-touch-icon" sizes="180x180" href="/images/favi.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/favi.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favi.png"><!-- Theme colors for browsers --><meta name="msapplication-TileColor" content="YOUR_COLOR_HEX"><meta name="theme-color" content="YOUR_COLOR_HEX"><!-- Auto-generated sitemap --><link rel="sitemap" href="/sitemap-index.xml"><!-- Preload background images for performance -->${backgrounds.map((src) => renderTemplate`<link rel="preload"${addAttribute(src, "href")} as="image" fetchpriority="high">`)}`;
 }, "/home/fedora-david/Portfolio/macos-terminal-portfolio/src/components/global/BaseHead.astro", void 0);
 
 const $$Astro = createAstro("https://example.com");
@@ -79,7 +501,7 @@ function MacToolbar() {
   const handleVSCodeClick = () => {
     window.location.href = "vscode:/";
   };
-  return /* @__PURE__ */ jsxs(Fragment, { children: [
+  return /* @__PURE__ */ jsxs(Fragment$1, { children: [
     /* @__PURE__ */ jsxs("div", { className: "sticky top-0 z-50 md:hidden bg-transparent text-white h-12 px-8 flex items-center justify-between text-base font-medium", children: [
       /* @__PURE__ */ jsx("span", { className: "font-semibold", children: formatIPhoneTime(currentDateTime) }),
       /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5", children: [
@@ -347,7 +769,7 @@ function MobileDock() {
       image: "/images/favi.png"
     }
   ];
-  return /* @__PURE__ */ jsxs(Fragment, { children: [
+  return /* @__PURE__ */ jsxs(Fragment$1, { children: [
     /* @__PURE__ */ jsx("div", { className: "fixed bottom-0 left-0 right-0 md:hidden z-40", children: /* @__PURE__ */ jsxs("div", { className: "mx-4 mb-4 p-3 bg-gradient-to-t from-gray-700 to-gray-800 backdrop-blur-xl rounded-3xl flex justify-around items-center max-w-[400px] mx-auto shadow-2xl border border-white/10", children: [
       /* @__PURE__ */ jsx(
         "a",
@@ -569,7 +991,7 @@ function DesktopDock() {
     text,
     /* @__PURE__ */ jsx("div", { className: "absolute left-1/2 -translate-x-1/2 -bottom-[7px] w-3 h-3 bg-[#1d1d1f]/80 backdrop-blur-sm rotate-45 border-b border-r border-gray-600" })
   ] }) });
-  return /* @__PURE__ */ jsxs(Fragment, { children: [
+  return /* @__PURE__ */ jsxs(Fragment$1, { children: [
     /* @__PURE__ */ jsx("div", { className: "fixed bottom-0 left-1/2 -translate-x-1/2 hidden md:block z-50", children: /* @__PURE__ */ jsx("div", { className: "relative mb-2 p-3 bg-gradient-to-t from-gray-700 to-gray-800 backdrop-blur-2xl rounded-2xl", children: /* @__PURE__ */ jsxs("div", { className: "flex items-end space-x-4", children: [
       /* @__PURE__ */ jsxs(
         "button",
@@ -989,20 +1411,16 @@ function Desktop({ initialBg, backgroundMap }) {
   ] });
 }
 
-const $$LandingPage = createComponent(async ($$result, $$props, $$slots) => {
+const $$LandingPage = createComponent(($$result, $$props, $$slots) => {
   const backgroundMap = {
-    "bg-1": "/images/mac-background1.jpg",
-    "bg-2": "/images/mac-background2.jpg",
-    "bg-3": "/images/mac-background3.jpg"
+    "bg-1": macBackground1.src,
+    "bg-2": macBackground2.src,
+    "bg-3": macBackground3.src
   };
-  await Promise.all(
-    backgrounds.map(
-      (bg) => getImage({
-        src: bg,
-        width: 3500
-      })
-    )
-  );
+  function getRandomBackground() {
+    const keys = Object.keys(backgroundMap);
+    return keys[Math.floor(Math.random() * keys.length)];
+  }
   return renderTemplate`${renderComponent($$result, "AppLayout", Desktop, { "client:load": true, "initialBg": getRandomBackground(), "backgroundMap": backgroundMap, "client:component-hydration": "load", "client:component-path": "/home/fedora-david/Portfolio/macos-terminal-portfolio/src/layouts/AppLayout", "client:component-export": "default" })}`;
 }, "/home/fedora-david/Portfolio/macos-terminal-portfolio/src/components/LandingPage.astro", void 0);
 

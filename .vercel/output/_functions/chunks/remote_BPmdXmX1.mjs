@@ -161,4 +161,4 @@ function isRemoteAllowed(src, {
   return domains.some((domain) => matchHostname(url, domain)) || remotePatterns.some((remotePattern) => matchPattern(url, remotePattern));
 }
 
-export { isRemoteAllowed as a, appendForwardSlash as b, isInternalPath as c, collapseDuplicateTrailingSlashes as d, fileExtension as f, hasFileExtension as h, isRemotePath as i, joinPaths as j, matchPattern as m, prependForwardSlash as p, removeTrailingForwardSlash as r, slash as s, trimSlashes as t };
+export { isRemotePath as a, appendForwardSlash as b, isInternalPath as c, collapseDuplicateTrailingSlashes as d, fileExtension as f, hasFileExtension as h, isRemoteAllowed as i, joinPaths as j, matchPattern as m, prependForwardSlash as p, removeTrailingForwardSlash as r, slash as s, trimSlashes as t };

@@ -1,21 +1,23 @@
 ---
-export const prerender = true;
-import { getImage } from 'astro:assets';
+export const prerender = false;
 import AppLayout from '../layouts/AppLayout';
+
+// Las importas desde assets usando la ruta correspondiente
+import macBackground1 from '../assets/images/mac-background1.jpg';
+import macBackground2 from '../assets/images/mac-background2.jpg';
+import macBackground3 from '../assets/images/mac-background3.jpg';
+
+// Extraemos la propiedad .src de cada una
 const backgroundMap = {
-  'bg-1': '/images/mac-background1.jpg',
-  'bg-2': '/images/mac-background2.jpg',
-  'bg-3': '/images/mac-background3.jpg'
+  'bg-1': macBackground1.src,
+  'bg-2': macBackground2.src,
+  'bg-3': macBackground3.src
 };
 
-const optimizedBackgrounds = await Promise.all(
-  backgrounds.map((bg) =>
-    getImage({
-      src: bg,
-      width: 3500,
-    })
-  )
-);
+function getRandomBackground() {
+  const keys = Object.keys(backgroundMap);
+  return keys[Math.floor(Math.random() * keys.length)];
+}
 ---
 
 <AppLayout
