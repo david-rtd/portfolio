@@ -2,18 +2,14 @@
 export const prerender = false;
 import AppLayout from '../layouts/AppLayout';
 
-import macBackground1 from '../assets/images/mac-background1.jpg';
-import macBackground2 from '../assets/images/mac-background2.jpg';
-import macBackground3 from '../assets/images/mac-background3.jpg';
-
-// Reconstruimos el objeto simulando lo que devolvía getImage() 
-// por si AppLayout busca propiedades internas además del .src
+// Declaramos el objeto con las rutas de la carpeta public
 const backgroundMap = {
-  'bg-1': { src: macBackground1.src, attributes: {} },
-  'bg-2': { src: macBackground2.src, attributes: {} },
-  'bg-3': { src: macBackground3.src, attributes: {} }
+  'bg-1': '/images/mac-background1.jpg',
+  'bg-2': '/images/mac-background2.jpg',
+  'bg-3': '/images/mac-background3.jpg'
 };
 
+// Función para elegir un fondo aleatorio
 function getRandomBackground() {
   const keys = Object.keys(backgroundMap);
   return keys[Math.floor(Math.random() * keys.length)];
